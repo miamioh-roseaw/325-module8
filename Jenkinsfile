@@ -37,8 +37,6 @@ pipeline {
       }
       steps {
         sh '''
-          cd ansible-automation
-
           echo "[INFO] Running Ansible Playbook..."
           ansible-playbook $PLAYBOOK -i $INVENTORY \
             -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}"
