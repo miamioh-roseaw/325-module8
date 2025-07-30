@@ -1,40 +1,35 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    INVENTORY = 'hosts'
-    PLAYBOOK = 'playbook.yaml'
-    PATH = "${HOME}/.local/bin:${env.PATH}"
-    ANSIBLE_CONFIG = 'ansible.cfg'
-    ANSIBLE_SSH_EXECUTABLE = 'ssh' 
-  }
-
-  stages {
-    stage('Install Ansible') {
-      steps {
-        sh '''
-          if ! command -v pip3 > /dev/null; then
-              echo "[INFO] pip3 not found. Installing..."
-              wget https://bootstrap.pypa.io/get-pip.py -O get-pip.py
-              python3 get-pip.py --user
-          fi
-          pip3 install --user ansible
-        '''
-      }
+    environment {
+        ANSIBLE_CONFIG = "${WORKSPACE}/ansible.cfg"
+        ANSIBLE_SSH_EXECUTABLE = 'ssh'
     }
 
-    stage('Run Ansible Playbook') {
-      environment {
-        CISCO_CREDS = credentials('cisco-ssh-creds')
-      }
-      steps {
-        sh '''
-          echo "[INFO] Running Ansible Playbook..."
-          export ANSIBLE_SSH_EXECUTABLE=ssh
-          ansible-playbook $PLAYBOOK -i $INVENTORY \
-            -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}"
-        '''
-      }
+    parameters {
+        string(name: 'ANSIBLE_USER', defaultValue: 'student', description: 'Username for Cisco devices')
+        password(name: 'ANSIBLE_PASSWORD', defaultValue: '', description: 'Password for Cisco devices')
     }
-  }
+
+    stages {
+        stage('Run Ansible Playbook') {
+            steps {
+                echo '[INFO] Running Ansible Playbook...'
+                sh '''
+                    ansible-playbook playbook.yaml -i hosts \
+                      -e ansible_user="${ANSIBLE_USER}" \
+                      -e ansible_password="${ANSIBLE_PASSWORD}"
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '✅ Jenkins pipeline finished.'
+        }
+        failure {
+            echo '❌ Jenkins pipeline failed.'
+        }
+    }
 }
