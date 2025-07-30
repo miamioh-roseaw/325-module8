@@ -6,13 +6,11 @@ pipeline {
     PLAYBOOK = 'playbook.yaml'
     PATH = "${HOME}/.local/bin:${env.PATH}"
     ANSIBLE_CONFIG = 'ansible.cfg'
-    ANSIBLE_HOST_KEY_CHECKING = 'False'
-    LIBSSH2KNOWNHOSTS = '/dev/null' // disables strict host checking with libssh
   }
 
   stages {
 
-    stage('Install Ansible and pylibssh') {
+    stage('Install Ansible and Required Collections') {
       steps {
         sh '''
           # Ensure pip is installed
@@ -22,8 +20,16 @@ pipeline {
               python3 get-pip.py --user
           fi
 
-          # Install Ansible and pylibssh
-          pip3 install --user ansible ansible-pylibssh
+          # Install Ansible
+          if ! command -v ansible-playbook > /dev/null; then
+              echo "[INFO] Installing Ansible..."
+              pip3 install --user ansible
+          else
+              echo "[INFO] Ansible already installed."
+          fi
+
+          # Install required collection for ios_banner module
+          ansible-galaxy collection install cisco.ios
         '''
       }
     }
@@ -36,7 +42,9 @@ pipeline {
         sh '''
           echo "[INFO] Running Ansible Playbook..."
           ansible-playbook $PLAYBOOK -i $INVENTORY \
-            -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}" -vvv
+            -e "ansible_user=${CISCO_CREDS_USR} \
+                ansible_password=${CISCO_CREDS_PSW} \
+                ansible_become_password=${CISCO_CREDS_PSW}"
         '''
       }
     }
