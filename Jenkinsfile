@@ -2,10 +2,10 @@ pipeline {
   agent any
 
   environment {
-    INVENTORY = 'ansible-automation/hosts'
-    PLAYBOOK = 'ansible-automation/playbook.yaml'
+    INVENTORY = 'hosts'
+    PLAYBOOK = 'playbook.yaml'
     PATH = "${HOME}/.local/bin:${env.PATH}"
-    ANSIBLE_CONFIG = 'ansible-automation/ansible.cfg'
+    ANSIBLE_CONFIG = 'ansible.cfg'
   }
 
   stages {
