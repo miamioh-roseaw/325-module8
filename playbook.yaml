@@ -2,9 +2,10 @@
   hosts: all
   gather_facts: no
   tasks:
-       - name: Set login banner
-       ios_banner:
-       banner: login
-       text: |
-      Welcome to {{ inventory_hostname }} Configured by Ansible
-       state: present
+    - name: Set login banner
+      ios_banner:
+        banner: login
+        text: |
+          Welcome to {{ inventory_hostname }} configured by Ansible
+        state: present
+
