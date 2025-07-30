@@ -1,6 +1,18 @@
 - name: Configure Cisco devices
   hosts: all
   gather_facts: no
+  vars:
+    ansible_user: "{{ lookup('env', 'CISCO_CREDS_USR') }}"
+    ansible_password: "{{ lookup('env', 'CISCO_CREDS_PSW') }}"
+    ansible_ssh_pass: "{{ ansible_password }}"
+    ansible_become: yes
+    ansible_become_method: enable
+    ansible_become_password: "{{ ansible_password }}"
+    ansible_network_os: ios
+    ansible_connection: network_cli
+    ansible_command_timeout: 60
+    authorize: yes
+    auth_pass: "{{ ansible_password }}"
   tasks:
     - name: Set login banner
       ios_banner:
@@ -8,4 +20,3 @@
         text: |
           Welcome to {{ inventory_hostname }} configured by Ansible
         state: present
-
