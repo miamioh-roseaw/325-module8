@@ -6,6 +6,8 @@ pipeline {
     PLAYBOOK = 'playbook.yaml'
     PATH = "${HOME}/.local/bin:${env.PATH}"
     ANSIBLE_CONFIG = 'ansible.cfg'
+    ANSIBLE_HOST_KEY_CHECKING = 'False'
+    LIBSSH2KNOWNHOSTS = '/dev/null' // disables strict host checking with libssh
   }
 
   stages {
@@ -13,8 +15,6 @@ pipeline {
     stage('Install Ansible and pylibssh') {
       steps {
         sh '''
-          echo "[INFO] Installing dependencies..."
-
           # Ensure pip is installed
           if ! command -v pip3 > /dev/null; then
               echo "[INFO] pip3 not found. Installing..."
@@ -22,21 +22,8 @@ pipeline {
               python3 get-pip.py --user
           fi
 
-          # Install Ansible if missing
-          if ! command -v ansible-playbook > /dev/null; then
-              echo "[INFO] Ansible not found. Installing..."
-              pip3 install --user ansible
-          else
-              echo "[INFO] Ansible already installed."
-          fi
-
-          # Install ansible-pylibssh if missing
-          if ! python3 -c "import ansible_pylibssh" 2>/dev/null; then
-              echo "[INFO] ansible-pylibssh not found. Installing..."
-              pip3 install --user ansible-pylibssh
-          else
-              echo "[INFO] ansible-pylibssh already installed."
-          fi
+          # Install Ansible and pylibssh
+          pip3 install --user ansible ansible-pylibssh
         '''
       }
     }
@@ -49,7 +36,7 @@ pipeline {
         sh '''
           echo "[INFO] Running Ansible Playbook..."
           ansible-playbook $PLAYBOOK -i $INVENTORY \
-            -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}"
+            -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}" -vvv
         '''
       }
     }
