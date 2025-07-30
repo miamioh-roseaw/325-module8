@@ -14,6 +14,9 @@
     authorize: yes
     auth_pass: "{{ ansible_password }}"
   tasks:
+    - name: Check connection type
+      debug:
+        msg: "Using connection: {{ ansible_connection }}"
     - name: Set login banner
       ios_banner:
         banner: login
