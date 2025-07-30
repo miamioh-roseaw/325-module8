@@ -5,12 +5,6 @@ pipeline {
         ANSIBLE_CONFIG = "${WORKSPACE}/ansible.cfg"
         ANSIBLE_SSH_EXECUTABLE = 'ssh'
     }
-
-    parameters {
-        string(name: 'ANSIBLE_USER', defaultValue: 'student', description: 'Username for Cisco devices')
-        password(name: 'ANSIBLE_PASSWORD', defaultValue: '', description: 'Password for Cisco devices')
-    }
-
     stages {
         stage('Run Ansible Playbook') {
             steps {
