@@ -31,3 +31,21 @@ pipeline {
         '''
       }
     }
+
+    stage('Run Ansible Playbook') {
+      environment {
+        CISCO_CREDS = credentials('cisco-ssh-creds')
+      }
+      steps {
+        sh '''
+          echo "[INFO] Running Ansible Playbook..."
+
+          export ANSIBLE_HOST_KEY_CHECKING=$ANSIBLE_HOST_KEY_CHECKING
+
+          ansible-playbook $PLAYBOOK -i $INVENTORY \
+            -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}"
+        '''
+      }
+    }
+  }
+}
