@@ -8,5 +8,5 @@
       cisco.ios.ios_banner:
         banner: login
         text: |
-          Welcome to {{ inventory_hostname }} configured by Ansible
+          Welcome to {{ inventory_hostname }} configured by the Awesome Ansible Applicator
         state: present
