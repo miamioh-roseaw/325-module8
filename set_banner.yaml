@@ -1,0 +1,12 @@
+---
+- name: Set login banner on all Cisco devices
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Set login banner
+      cisco.ios.ios_banner:
+        banner: login
+        text: |
+          Welcome to {{ inventory_hostname }} configured by Ansible
+        state: present
