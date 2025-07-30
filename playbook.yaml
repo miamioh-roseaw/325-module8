@@ -9,7 +9,7 @@
     ansible_become_method: enable
     ansible_become_password: "{{ ansible_password }}"
     ansible_network_os: ios
-    ansible_connection: network_cli
+    ansible_connection: paramiko
     ansible_command_timeout: 60
     authorize: yes
     auth_pass: "{{ ansible_password }}"
