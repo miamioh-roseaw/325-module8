@@ -5,6 +5,7 @@ pipeline {
     INVENTORY = 'hosts'
     PLAYBOOK = 'playbook.yaml'
     ANSIBLE_CONFIG = 'ansible.cfg'
+    ANSIBLE_SSH_EXECUTABLE = 'ssh'
     PATH = "${HOME}/.local/bin:${env.PATH}"
   }
 
