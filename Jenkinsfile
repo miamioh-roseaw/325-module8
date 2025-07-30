@@ -4,9 +4,9 @@ pipeline {
   environment {
     INVENTORY = 'hosts'
     PLAYBOOK = 'playbook.yaml'
-    ANSIBLE_CONFIG = 'ansible.cfg'
-    ANSIBLE_SSH_EXECUTABLE = 'ssh'
     PATH = "${HOME}/.local/bin:${env.PATH}"
+    ANSIBLE_CONFIG = 'ansible.cfg'
+    ANSIBLE_SSH_EXECUTABLE = 'ssh' 
   }
 
   stages {
@@ -18,8 +18,6 @@ pipeline {
               wget https://bootstrap.pypa.io/get-pip.py -O get-pip.py
               python3 get-pip.py --user
           fi
-
-          echo "[INFO] Installing Ansible and required packages..."
           pip3 install --user ansible
         '''
       }
