@@ -12,7 +12,17 @@ mid-sw  ansible_host=10.10.10.7
 [all:vars]
 ansible_connection=network_cli
 ansible_network_os=ios
+ansible_user={{ ansible_user | default('student') }}
+ansible_password={{ ansible_password | default('Passw0rd!') }}
+
+# Use Paramiko to avoid libssh issues
 ansible_transport=paramiko
+
+# Disable host key checking
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+# Improve performance
 ansible_ssh_pipelining=yes
+
+# Ensure Python is available (fallback for modules needing local Python)
 ansible_python_interpreter=/usr/bin/python3
