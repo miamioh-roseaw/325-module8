@@ -1,28 +1,18 @@
 [routers]
-mgmt-rtr ansible_host=10.10.10.1 ansible_connection=paramiko
-reg-rtr ansible_host=10.10.10.2 ansible_connection=paramiko
-ham-rtr ansible_host=10.10.10.3 ansible_connection=paramiko
-mid-rtr ansible_host=10.10.10.4 ansible_connection=paramiko
+mgmt-rtr ansible_host=10.10.10.1
+reg-rtr  ansible_host=10.10.10.2
+ham-rtr  ansible_host=10.10.10.3
+mid-rtr  ansible_host=10.10.10.4
 
 [switches]
-mgmt-sw ansible_host=10.10.10.5 ansible_connection=paramiko
-ham-sw  ansible_host=10.10.10.6 ansible_connection=paramiko
-mid-sw  ansible_host=10.10.10.7 ansible_connection=paramiko
+mgmt-sw  ansible_host=10.10.10.5
+ham-sw   ansible_host=10.10.10.6
+mid-sw   ansible_host=10.10.10.7
 
 [all:vars]
-ansible_connection=paramiko
+ansible_connection=network_cli
 ansible_network_os=ios
-ansible_user={{ ansible_user | default('student') }}
-ansible_password={{ ansible_password | default('Passw0rd!') }}
-
-# Use Paramiko to avoid libssh issues
-ansible_transport=paramiko
-
-# Disable host key checking
+ansible_user=student
+ansible_password=Passw0rd!
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-
-# Improve performance
 ansible_ssh_pipelining=yes
-
-# Ensure Python is available (fallback for modules needing local Python)
-ansible_python_interpreter=/usr/bin/python3
