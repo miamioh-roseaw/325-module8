@@ -5,6 +5,7 @@ pipeline {
     INVENTORY = 'hosts'
     PLAYBOOK = 'playbook.yaml'
     ANSIBLE_CONFIG = 'ansible.cfg'
+    PATH = "${HOME}/.local/bin:${env.PATH}"
   }
 
   stages {
@@ -12,15 +13,18 @@ pipeline {
       steps {
         sh '''
           if ! command -v pip3 > /dev/null; then
+              echo "[INFO] pip3 not found. Installing..."
               wget https://bootstrap.pypa.io/get-pip.py -O get-pip.py
               python3 get-pip.py --user
           fi
+
+          echo "[INFO] Installing Ansible and required packages..."
           pip3 install --user ansible
         '''
       }
     }
 
-    stage('Run Playbook') {
+    stage('Run Ansible Playbook') {
       environment {
         CISCO_CREDS = credentials('cisco-ssh-creds')
       }
