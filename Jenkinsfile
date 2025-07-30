@@ -6,6 +6,8 @@ pipeline {
     PLAYBOOK = 'playbook.yaml'
     PATH = "${HOME}/.local/bin:${env.PATH}"
     ANSIBLE_CONFIG = 'ansible.cfg'
+    ANSIBLE_HOST_KEY_CHECKING = 'False'
+    ANSIBLE_SSH_TYPE = 'paramiko'
   }
 
   stages {
