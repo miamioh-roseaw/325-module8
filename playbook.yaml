@@ -6,5 +6,5 @@
     - name: Set login banner
       ios_banner:
         banner: login
-        text: "Welcome to {{ inventory_hostname }}!"
+        text: "Welcome to {{ inventory_hostname }} configured by Ansible!"
         state: present
