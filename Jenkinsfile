@@ -30,6 +30,7 @@ pipeline {
       steps {
         sh '''
           echo "[INFO] Running Ansible Playbook..."
+          export ANSIBLE_SSH_EXECUTABLE=ssh
           ansible-playbook $PLAYBOOK -i $INVENTORY \
             -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}"
         '''
