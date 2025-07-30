@@ -6,14 +6,15 @@ pipeline {
     PLAYBOOK = 'playbook.yaml'
     PATH = "${HOME}/.local/bin:${env.PATH}"
     ANSIBLE_CONFIG = 'ansible.cfg'
-    ANSIBLE_HOST_KEY_CHECKING = 'False'
   }
 
   stages {
 
-    stage('Install Ansible') {
+    stage('Install Ansible and pylibssh') {
       steps {
         sh '''
+          echo "[INFO] Installing dependencies..."
+
           # Ensure pip is installed
           if ! command -v pip3 > /dev/null; then
               echo "[INFO] pip3 not found. Installing..."
@@ -21,12 +22,20 @@ pipeline {
               python3 get-pip.py --user
           fi
 
-          # Install Ansible if not available
+          # Install Ansible if missing
           if ! command -v ansible-playbook > /dev/null; then
               echo "[INFO] Ansible not found. Installing..."
               pip3 install --user ansible
           else
-              echo "[INFO] Ansible is already installed."
+              echo "[INFO] Ansible already installed."
+          fi
+
+          # Install ansible-pylibssh if missing
+          if ! python3 -c "import ansible_pylibssh" 2>/dev/null; then
+              echo "[INFO] ansible-pylibssh not found. Installing..."
+              pip3 install --user ansible-pylibssh
+          else
+              echo "[INFO] ansible-pylibssh already installed."
           fi
         '''
       }
@@ -39,9 +48,6 @@ pipeline {
       steps {
         sh '''
           echo "[INFO] Running Ansible Playbook..."
-
-          export ANSIBLE_HOST_KEY_CHECKING=$ANSIBLE_HOST_KEY_CHECKING
-
           ansible-playbook $PLAYBOOK -i $INVENTORY \
             -e "ansible_user=${CISCO_CREDS_USR} ansible_password=${CISCO_CREDS_PSW}"
         '''
