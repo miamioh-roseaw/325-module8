@@ -1,13 +1,13 @@
 [routers]
-mgmt-rtr ansible_host=10.10.10.1
-reg-rtr ansible_host=10.10.10.2
-ham-rtr ansible_host=10.10.10.3
-mid-rtr ansible_host=10.10.10.4
+mgmt-rtr ansible_host=10.10.10.1 ansible_connection=paramiko
+reg-rtr ansible_host=10.10.10.2 ansible_connection=paramiko
+ham-rtr ansible_host=10.10.10.3 ansible_connection=paramiko
+mid-rtr ansible_host=10.10.10.4 ansible_connection=paramiko
 
 [switches]
-mgmt-sw ansible_host=10.10.10.5
-ham-sw  ansible_host=10.10.10.6
-mid-sw  ansible_host=10.10.10.7
+mgmt-sw ansible_host=10.10.10.5 ansible_connection=paramiko
+ham-sw  ansible_host=10.10.10.6 ansible_connection=paramiko
+mid-sw  ansible_host=10.10.10.7 ansible_connection=paramiko
 
 [all:vars]
 ansible_connection=network_cli
